@@ -28,7 +28,9 @@ sjPlot::view_df(df1,show.frq = T,show.string.values = T)
 
 for (i in names(select(df1,v10:v32,v47:v55,v57:v61,v63:v68))) {
   df1[[i]] <- factor(df1[[i]],levels = rev(c("Strongly agree","Agree","Neutral",
-                                     "Disagree","Strongly disagree","NA/Don't know"))) 
+                                     "Disagree","Strongly disagree","NA/Don't know")),
+                     labels = rev(c("Strongly agree","Agree","Neutral",
+                                    "Disagree","Strongly disagree","-999"))) 
 }
 
 
@@ -36,18 +38,22 @@ for (i in names(select(df1,v35:v45))) {
   df1[[i]] <- factor(df1[[i]],levels = rev(c("Strongly agree","Agree","Neutral",
                                              "Disgree","Strongly disagree","NA/Don't know")),
                      labels =  rev(c("Strongly agree","Agree","Neutral",
-                                     "Disagree","Strongly disagree","NA/Don't know"))) 
+                                     "Disagree","Strongly disagree","-999"))) 
 }
-
-
-
 
 
 frq(df1$v33)
 df1$v33 <- factor(df1$v33,
                   levels = rev(c("Very satisfied","Somewhat satisfied",
                              "Neither satisfied nor dissatisfied",
-                             "Somewhat dissatisfied","Very dissatisfied","NA/Don't know")))
+                             "Somewhat dissatisfied","Very dissatisfied","NA/Don't know")),
+                  labels = rev(c("Very satisfied","Somewhat satisfied",
+                                 "Neither satisfied nor dissatisfied",
+                                 "Somewhat dissatisfied","Very dissatisfied","-999")))
+
+
+
+select(df1,v6:v33,v35:v45,v47:v55,v57:v61,v63:v68) %>% frq()
 
 
 # STEP 4: set variable labels recovered from STEP 1
@@ -110,6 +116,8 @@ sjPlot::view_df(df2,show.frq = T,
                 show.string.values = T,
                 show.prc = T,
                 file = here::here("output/codebook.html"))
+
+save(df2,file = here::here("input/data/proc/bigsss_2023.RData"))
 
 haven::write_dta(df2,path = here::here("input/data/proc/bigsss_2023.dta"))
 haven::write_sav(df2,path = here::here("input/data/proc/bigsss_2023.sav"))

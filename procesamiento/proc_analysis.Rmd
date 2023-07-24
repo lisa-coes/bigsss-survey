@@ -1,5 +1,5 @@
 ---
-title: "Análisis de datos"
+title: "BIGSSS Survey 2023"
 date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
 output: 
   html_document: 
@@ -10,7 +10,7 @@ output:
       smooth_scroll: false
       number_sections: true
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 # Setup
@@ -35,36 +35,52 @@ div.tocify {
 }
 ```
 
-
-## Librerías
-
-```{r}
+```{r,fig.height=5,fig.width=10}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
-pacman::p_load(dplyr,       # Manipulacion de datos 
-               haven,       # importar datos en .dta o .sav
-               sjmisc,      # descriptivos y frecuencias
-               sjPlot,      # tablas, plots y descriptivos
-               summarytools,# resumen de dataframe
-               texreg,      # tablas de regresion
-               knitr,       # tablas kable
-               kableExtra,  # tablas kable personalizadas
-               ggplot2,     # plots
-               corrplot     # plot correlacion
-               )
+pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,sjPlot,stringr)
+load(here::here("input/data/proc/bigsss_2023.RData"))
+
+df2[df2==-999] <- NA 
+df2<- set_na(df2,na = -999)
+
+#bigsss forum
+# df2 %>% select(v10:v12) %>% frq()
+
+vals <- c("#f1eef6ff", "#bdc9e1ff","#b3b3b3ff","#74a9cfff","#0570b0ff")
+labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
+
+# df2 %>% select(v12,v11,v10) %>% frq()
+
+df2 %>% select(v12,v11,v10) %>%
+  # plot_likert(cat.neutral = 3) + 
+  plot_stackfrq(title = "BIGSSS Forum") +
+  # scale_fill_manual(values=vals) +
+  theme(legend.position = "bottom") 
+
+#proposal workshop
+# df2 %>% select(v13:v15) %>% frq()
+df2 %>% select(v13:v15) %>%
+  plot_stackfrq(title = "Proposal workshop") + 
+  # scale_fill_manual(values=vals,labels=labels) +  
+  theme(legend.position = "bottom")
+
+#proposal workshop
+df2 %>% select(v16:v18) %>%
+  plot_stackfrq(title = "Core Theory Seminar") + 
+  # scale_fill_manual(values=vals) +  
+  theme(legend.position = "bottom")
+
+
+#proposal workshop
+# df2 %>% select(v19:v21) %>% frq()
+
+df2 %>% select(v19,v20) %>%
+  plot_stackfrq(title = "Methods courses") + 
+  # scale_fill_manual(values=vals) +
+  theme(legend.position = "bottom")
+
 ```
 
-## Datos
-```{r}
-load(file = "../input/data/proc/df_final.Rdata" )
-```
-
-# Análisis
-
-## Descriptivos univariados
-
-## Descriptivos bivariadas
-
-## Estimaciones - modelos
 
 
 
