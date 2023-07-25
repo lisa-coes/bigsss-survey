@@ -59,9 +59,9 @@ df2 %>% select(v12,v11,v10) %>%
 
 #proposal workshop
 # df2 %>% select(v13:v15) %>% frq()
-df2 %>% select(v13:v15) %>%
+df2 %>% select(v15,v14,v13) %>%
   plot_stackfrq(title = "Proposal workshop") + 
-  # scale_fill_manual(values=vals,labels=labels) +  
+  # scale_fill_manual(values=vals,labels=labels) +
   theme(legend.position = "bottom")
 
 #proposal workshop
@@ -70,15 +70,23 @@ df2 %>% select(v16:v18) %>%
   # scale_fill_manual(values=vals) +  
   theme(legend.position = "bottom")
 
-
-#proposal workshop
+# 
+# proposal workshop
 # df2 %>% select(v19:v21) %>% frq()
-
-df2 %>% select(v19,v20) %>%
+df2 %>% select(v19) %>%
   plot_stackfrq(title = "Methods courses") + 
   # scale_fill_manual(values=vals) +
   theme(legend.position = "bottom")
 
+df2 %>% select(v20) %>%
+  plot_stackfrq(title = "Methods courses") + 
+  # scale_fill_manual(values=vals) +
+  theme(legend.position = "bottom")
+
+df2 %>% select(v21) %>%
+  plot_stackfrq(title = "Methods courses") + 
+  # scale_fill_manual(values=vals) +
+  theme(legend.position = "bottom")
 ```
 
 

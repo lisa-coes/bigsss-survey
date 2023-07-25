@@ -3,7 +3,7 @@ pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,sjPlot,stringr)
 
 #STEP 0:load data from excel file
 df1 <- 
-  xlsx::read.xlsx(file = here::here("input/data/original/BIGSSS Doctoral Fellow Survey 2023(1-22).xlsx"),
+  xlsx::read.xlsx(file = here::here("input/data/original/BIGSSS Doctoral Fellow Survey 2023(1-26).xlsx"),
                   sheetIndex = 1,password = "survey2023")
 
 
@@ -26,21 +26,26 @@ sjPlot::view_df(df1,show.frq = T,show.string.values = T)
 #reorder factor levels
 #variables with agree to disagree
 
-for (i in names(select(df1,v10:v32,v47:v55,v57:v61,v63:v68))) {
-  df1[[i]] <- factor(df1[[i]],levels = rev(c("Strongly agree","Agree","Neutral",
-                                     "Disagree","Strongly disagree","NA/Don't know")),
-                     labels = rev(c("Strongly agree","Agree","Neutral",
-                                    "Disagree","Strongly disagree","-999"))) 
-}
-
-
 for (i in names(select(df1,v35:v45))) {
-  df1[[i]] <- factor(df1[[i]],levels = rev(c("Strongly agree","Agree","Neutral",
-                                             "Disgree","Strongly disagree","NA/Don't know")),
-                     labels =  rev(c("Strongly agree","Agree","Neutral",
-                                     "Disagree","Strongly disagree","-999"))) 
+  df1[[i]] <- car::recode(df1[[i]],"'Disgree'='Disagree'")  #fix typo 
 }
 
+for (i in names(select(df1,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
+  df1[[i]] <- factor(df1[[i]],
+                     levels = rev(c("Strongly agree","Agree","Neutral",
+                                    "Disagree","Strongly disagree",
+                                    "NA/Don't know"))) 
+}
+sjPlot::view_df(df1,show.frq = T,show.string.values = T)
+
+labels <-  c("-999", "Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
+levels <- rev(c("Strongly agree","Agree","Neutral","Disagree","Strongly disagree","NA/Don't know"))
+
+for (i in names(select(df1,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
+  df1[[i]] <- factor(df1[[i]],levels =levels,labels = labels) 
+}
+
+sjPlot::view_df(df1,show.frq = T,show.string.values = T)
 
 frq(df1$v33)
 df1$v33 <- factor(df1$v33,
