@@ -10,7 +10,7 @@ output:
       smooth_scroll: false
       number_sections: true
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 # Setup
@@ -35,61 +35,247 @@ div.tocify {
 }
 ```
 
-```{r,fig.height=5,fig.width=10}
+
+```{r}
+# set1 <-  RColorBrewer::brewer.pal(n = 4, name = "Blues")
+set1 <- c("#5586B4","#D30132","#999999","#004481","#1C2747")  
+options(ggplot2.discrete.fill = set1)
+options(ggplot2.discrete.colour = set1)
+ggplot2::theme_set(ggplot2::theme_minimal())
+ggplot2::theme_update(text=ggplot2::element_text(family="serif"))  
+```
+
+```{r,fig.dim=c(8,4)}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
-pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,sjPlot,stringr)
+pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
 load(here::here("input/data/proc/bigsss_2023.RData"))
 
 df2[df2==-999] <- NA 
 df2<- set_na(df2,na = -999)
 
-#bigsss forum
-# df2 %>% select(v10:v12) %>% frq()
-
-vals <- c("#f1eef6ff", "#bdc9e1ff","#b3b3b3ff","#74a9cfff","#0570b0ff")
+varlab <- sjlabelled::get_label(df2)
 labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
 
-# df2 %>% select(v12,v11,v10) %>% frq()
+for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
+  df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
+}
 
-df2 %>% select(v12,v11,v10) %>%
-  # plot_likert(cat.neutral = 3) + 
-  plot_stackfrq(title = "BIGSSS Forum") +
-  # scale_fill_manual(values=vals) +
-  theme(legend.position = "bottom") 
+sjlabelled::set_label(df2) <- varlab
 
-#proposal workshop
-# df2 %>% select(v13:v15) %>% frq()
-df2 %>% select(v15,v14,v13) %>%
-  plot_stackfrq(title = "Proposal workshop") + 
-  # scale_fill_manual(values=vals,labels=labels) +
-  theme(legend.position = "bottom")
+data <- 
+frq(df2$v7) %>% 
+  as.data.frame() %>% 
+  select(category=val,count=frq) %>% 
+  na.omit()
 
-#proposal workshop
-df2 %>% select(v16:v18) %>%
-  plot_stackfrq(title = "Core Theory Seminar") + 
-  # scale_fill_manual(values=vals) +  
-  theme(legend.position = "bottom")
+# Compute percentages
+data$fraction <- data$count / sum(data$count)
 
-# 
-# proposal workshop
-# df2 %>% select(v19:v21) %>% frq()
-df2 %>% select(v19) %>%
-  plot_stackfrq(title = "Methods courses") + 
-  # scale_fill_manual(values=vals) +
-  theme(legend.position = "bottom")
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax <- cumsum(data$fraction)
 
-df2 %>% select(v20) %>%
-  plot_stackfrq(title = "Methods courses") + 
-  # scale_fill_manual(values=vals) +
-  theme(legend.position = "bottom")
+# Compute the bottom of each rectangle
+data$ymin <- c(0, head(data$ymax, n=-1))
 
-df2 %>% select(v21) %>%
-  plot_stackfrq(title = "Methods courses") + 
-  # scale_fill_manual(values=vals) +
-  theme(legend.position = "bottom")
+# Compute label position
+data$labelPosition <- (data$ymax + data$ymin) / 2
+
+# Compute a good label
+data$label <- paste0(scales::percent(data$fraction))
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_text( x=2, aes(y=labelPosition, label=label, color=category), size=5) + # x here controls label position (inner / outer)
+  # scale_fill_brewer(palette=3) +
+  # scale_color_brewer(palette=3) +
+  coord_polar(theta="y") +
+  xlim(c(-1, 4)) +
+  theme_void() +
+  theme(legend.position = "right",legend.title=element_blank())+
+  labs(title = "Are you an international fellow?")
 ```
 
+```{r,fig.dim=c(10,5)}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
+load(here::here("input/data/proc/bigsss_2023.RData"))
 
+df2[df2==-999] <- NA 
+df2<- set_na(df2,na = -999)
+
+varlab <- sjlabelled::get_label(df2)
+labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
+
+for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
+  df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
+}
+
+sjlabelled::set_label(df2) <- varlab
+
+data <- 
+frq(df2$v8) %>% 
+  as.data.frame() %>% 
+  select(category=val,count=frq) %>% 
+  na.omit()
+
+# Compute percentages
+data$fraction <- data$count / sum(data$count)
+
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax <- cumsum(data$fraction)
+
+# Compute the bottom of each rectangle
+data$ymin <- c(0, head(data$ymax, n=-1))
+
+# Compute label position
+data$labelPosition <- (data$ymax + data$ymin) / 2
+
+# Compute a good label
+data$label <- paste0(scales::percent(data$fraction))
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_text( x=2, aes(y=labelPosition, label=label, color=category), size=5) + # x here controls label position (inner / outer)
+  # scale_fill_brewer(palette=3) +
+  # scale_color_brewer(palette=3) +
+  coord_polar(theta="y") +
+  xlim(c(-1, 4)) +
+  theme_void() +
+  theme(legend.position = "right",legend.title=element_blank())+
+  labs(title = "What is your status of affiliation with BIGSS?")
+```
+
+```{r,fig.dim=c(8,4)}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
+load(here::here("input/data/proc/bigsss_2023.RData"))
+
+df2[df2==-999] <- NA 
+df2<- set_na(df2,na = -999)
+
+varlab <- sjlabelled::get_label(df2)
+labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
+
+for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
+  df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
+}
+
+sjlabelled::set_label(df2) <- varlab
+
+data <- 
+frq(df2$v9) %>% 
+  as.data.frame() %>% 
+  select(category=val,count=frq) %>% 
+  na.omit()
+
+# Compute percentages
+data$fraction <- data$count / sum(data$count)
+
+# Compute the cumulative percentages (top of each rectangle)
+data$ymax <- cumsum(data$fraction)
+
+# Compute the bottom of each rectangle
+data$ymin <- c(0, head(data$ymax, n=-1))
+
+# Compute label position
+data$labelPosition <- (data$ymax + data$ymin) / 2
+
+# Compute a good label
+data$label <- paste0(scales::percent(data$fraction))
+# Make the plot
+ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
+  geom_rect() +
+  geom_text( x=2, aes(y=labelPosition, label=label, color=category), size=5) + # x here controls label position (inner / outer)
+  # scale_fill_brewer(palette=3) +
+  # scale_color_brewer(palette=3) +
+  coord_polar(theta="y") +
+  xlim(c(-1, 4)) +
+  theme_void() +
+  theme(legend.position = "right",legend.title=element_blank())+
+  labs(title = "When did you join BIGSSS?")
+```
+
+```{r,fig.dim=c(8,4)}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
+load(here::here("input/data/proc/bigsss_2023.RData"))
+
+df2[df2==-999] <- NA 
+df2<- set_na(df2,na = -999)
+
+varlab <- sjlabelled::get_label(df2)
+labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
+
+for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
+  df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
+}
+
+sjlabelled::set_label(df2) <- varlab
+df_lik1<- df2 
+df_lik1 %>% 
+  select(v10,v11,v12) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "Prep. Forum")
+
+
+df_lik1 %>% 
+  select(v13:v15) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "Proposal Workshop")
+
+df_lik1 %>% 
+  select(v16:v18) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "Core Theory Seminar")
+
+df_lik1 %>% 
+  select(v19:v21) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "Methods Courses")
+
+df_lik1 %>% 
+  select(v22,v23,v24) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "Doctoral Colloquia")
+
+df_lik1 %>% 
+  select(v25,v26,v27) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "Lecture Series")
+
+df_lik1 %>% 
+  select(v28,v29,v30) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "Transferable Skills Workshops")
+
+df_lik1 %>% 
+  select(v31,v32) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(center=3, wrap=30) +
+  labs(title = "PACs")
+
+df_lik1 %>% 
+  select(v33) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(wrap=30) +
+  labs(title = "Satisfaction with curriculum")
+```
 
 
 
