@@ -195,7 +195,7 @@ ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   labs(title = "When did you join BIGSSS?")
 ```
 
-```{r,fig.dim=c(8,4)}
+```{r,fig.dim=c(8,3)}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
 load(here::here("input/data/proc/bigsss_2023.RData"))

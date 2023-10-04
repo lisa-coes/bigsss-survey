@@ -3,8 +3,8 @@ pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,sjPlot,stringr)
 
 #STEP 0:load data from excel file
 df1 <- 
-  xlsx::read.xlsx(file = here::here("input/data/original/BIGSSS Doctoral Fellow Survey 2023(1-26).xlsx"),
-                  sheetIndex = 1,password = "survey2023")
+  xlsx::read.xlsx(file = here::here("input/data/original/BIGSSS Doctoral Fellow Survey 2023(1-32).xlsx"),
+                  sheetIndex = 1)
 
 
 
