@@ -1,22 +1,24 @@
 ---
 title: "BIGSSS Survey 2023"
 date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
-output: 
-  html_document: 
+output:
+  pdf_document:
+    toc: yes
+  html_document:
     toc: yes
     code_folding: hide
-    toc_float: 
-      collapsed: true
-      smooth_scroll: false
-      number_sections: true
-editor_options: 
+    toc_float:
+      collapsed: yes
+      smooth_scroll: no
+      number_sections: yes
+editor_options:
   chunk_output_type: console
 ---
 
 # Setup
 
-```{r setup}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```{r setup,echo=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE,cache = T)
 options(scipen=9999) # desactivar notacion cientifica
 ```
 
@@ -25,32 +27,32 @@ options(scipen=9999) # desactivar notacion cientifica
 body .main-container {
       max-width: 1600px !important;
       width: 1600px !important;
-    }
+    }   
 
 #/* expandir width de la TOC*/
 div.tocify {
     width: 22% !important;
     max-width: 331px !important;
-    max-height: 102% !important;
+    max-height: 102% !important;   
 }
 ```
 
 
-```{r}
+```{r,echo=FALSE}
 # set1 <-  RColorBrewer::brewer.pal(n = 4, name = "Blues")
-set1 <- c("#5586B4","#D30132","#999999","#004481","#1C2747")  
-options(ggplot2.discrete.fill = set1)
+set1 <- c("#5586B4","#D30132","#999999","#004481","#1C2747")    
+options(ggplot2.discrete.fill = set1) 
 options(ggplot2.discrete.colour = set1)
-ggplot2::theme_set(ggplot2::theme_minimal())
-ggplot2::theme_update(text=ggplot2::element_text(family="serif"))  
+ggplot2::theme_set(ggplot2::theme_minimal())   
+ggplot2::theme_update(text=ggplot2::element_text(family="serif"))        
 ```
 
-```{r,fig.dim=c(8,4)}
+```{r,fig.dim=c(10,4),echo=FALSE}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
 load(here::here("input/data/proc/bigsss_2023.RData"))
 
-df2[df2==-999] <- NA 
+df2[df2==-999] <- NA   
 df2<- set_na(df2,na = -999)
 
 varlab <- sjlabelled::get_label(df2)
@@ -59,8 +61,8 @@ labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
 for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
   df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
 }
-
-sjlabelled::set_label(df2) <- varlab
+  
+sjlabelled::set_label(df2) <- varlab  
 
 data <- 
 frq(df2$v7) %>% 
@@ -92,15 +94,16 @@ ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   xlim(c(-1, 4)) +
   theme_void() +
   theme(legend.position = "right",legend.title=element_blank())+
-  labs(title = "Are you an international fellow?")
+  labs(title = "Are you an international fellow?",
+       subtitle = paste0("n = ",sum(data$count)))      
 ```
 
-```{r,fig.dim=c(10,5)}
+```{r,fig.dim=c(10,5),echo=FALSE}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
 load(here::here("input/data/proc/bigsss_2023.RData"))
 
-df2[df2==-999] <- NA 
+df2[df2==-999] <- NA    
 df2<- set_na(df2,na = -999)
 
 varlab <- sjlabelled::get_label(df2)
@@ -108,7 +111,7 @@ labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
 
 for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
   df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
-}
+}   
 
 sjlabelled::set_label(df2) <- varlab
 
@@ -117,7 +120,7 @@ frq(df2$v8) %>%
   as.data.frame() %>% 
   select(category=val,count=frq) %>% 
   na.omit()
-
+   
 # Compute percentages
 data$fraction <- data$count / sum(data$count)
 
@@ -142,10 +145,11 @@ ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   xlim(c(-1, 4)) +
   theme_void() +
   theme(legend.position = "right",legend.title=element_blank())+
-  labs(title = "What is your status of affiliation with BIGSS?")
+  labs(title = "What is your status of affiliation with BIGSS?",
+       subtitle = paste0("n = ",sum(data$count)))
 ```
 
-```{r,fig.dim=c(8,4)}
+```{r,fig.dim=c(8,4),echo=FALSE}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
 load(here::here("input/data/proc/bigsss_2023.RData"))
@@ -192,12 +196,12 @@ ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   xlim(c(-1, 4)) +
   theme_void() +
   theme(legend.position = "right",legend.title=element_blank())+
-  labs(title = "When did you join BIGSSS?")
+  labs(title = "When did you join BIGSSS?", subtitle = paste0("n = ",sum(data$count)))
 ```
 
-```{r,fig.dim=c(8,3)}
+```{r,fig.dim=c(15,7.5),echo=FALSE}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
-pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
+pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert,plyr)
 load(here::here("input/data/proc/bigsss_2023.RData"))
 
 df2[df2==-999] <- NA 
@@ -210,70 +214,74 @@ for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
   df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
 }
 
-sjlabelled::set_label(df2) <- varlab
+ggplot2::theme_update(text=element_text(size=18,  family="serif"))  
+#bigsss color palette
+set1 <- c("#5586B4","#D30132","#999999","#004481","#1C2747")
+
+sjlabelled::set_label(df2) <- paste0(varlab, " (n = ",summarise_all(df2,~ sum(!is.na(.))),")")
+
 df_lik1<- df2 
 df_lik1 %>% 
   select(v10,v11,v12) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
-  labs(title = "Prep. Forum")
-
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = "Prep. Forum") 
 
 df_lik1 %>% 
   select(v13:v15) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=35,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Proposal Workshop")
 
 df_lik1 %>% 
   select(v16:v18) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Core Theory Seminar")
 
 df_lik1 %>% 
   select(v19:v21) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Methods Courses")
 
 df_lik1 %>% 
   select(v22,v23,v24) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=35,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Doctoral Colloquia")
 
 df_lik1 %>% 
   select(v25,v26,v27) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Lecture Series")
 
 df_lik1 %>% 
   select(v28,v29,v30) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Transferable Skills Workshops")
 
 df_lik1 %>% 
   select(v31,v32) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(center=3, wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "PACs")
 
 df_lik1 %>% 
   select(v33) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(wrap=30) +
+  plot(low.color="#D30132",high.color='#5586B4',wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Satisfaction with curriculum")
 ```
 
