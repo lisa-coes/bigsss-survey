@@ -2,8 +2,6 @@
 title: "BIGSSS Survey 2023"
 date: "`r format(Sys.time(), '%A %d %B %Y %X')`"
 output:
-  pdf_document:
-    toc: yes
   html_document:
     toc: yes
     code_folding: hide
@@ -11,6 +9,8 @@ output:
       collapsed: yes
       smooth_scroll: no
       number_sections: yes
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: console
 ---
@@ -54,7 +54,6 @@ load(here::here("input/data/proc/bigsss_2023.RData"))
 
 df2[df2==-999] <- NA   
 df2<- set_na(df2,na = -999)
-
 varlab <- sjlabelled::get_label(df2)
 labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
 
@@ -199,7 +198,7 @@ ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=category)) +
   labs(title = "When did you join BIGSSS?", subtitle = paste0("n = ",sum(data$count)))
 ```
 
-```{r,fig.dim=c(15,7.5),echo=FALSE}
+```{r,fig.dim=c(14,6.5),echo=FALSE}
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert,plyr)
 load(here::here("input/data/proc/bigsss_2023.RData"))
@@ -226,7 +225,7 @@ df_lik1 %>%
   setNames(get_label(.)) %>% 
   likert() %>%
   plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
-  labs(title = "Prep. Forum") 
+  labs(title = "Preparatory Forum") 
 
 df_lik1 %>% 
   select(v13:v15) %>% 
@@ -275,16 +274,92 @@ df_lik1 %>%
   setNames(get_label(.)) %>% 
   likert() %>%
   plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
-  labs(title = "PACs")
+  labs(title = "Progress Assessment Colloquia (PACs)")
 
 df_lik1 %>% 
   select(v33) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
   plot(low.color="#D30132",high.color='#5586B4',wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
-  labs(title = "Satisfaction with curriculum")
+  labs(title = "BIGSSS Curriculum Overall")
+
+
+df_lik1 %>% 
+  select(v35:v43) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  labs(title = "Dissertation Committee")
+
+df_lik1 %>% 
+  select(v44:v45) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  labs(title = "BIGSSS Faculty")
+
+df_lik1 %>% 
+  select(v47:v55) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  labs(title = "Administrative Structures at BIGSSS")
+
+df_lik1 %>% 
+  select(v57:v61) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  labs(title = "Equality, Diversity, and Inclusion at BIGSSS")
+
+df_lik1 %>% 
+  select(v57:v61) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  labs(title = "Equality, Diversity, and Inclusion at BIGSSS")
+
+
+df_lik1 %>% 
+  select(v63:v68) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  labs(title = "BIGSSS in General")
 ```
 
+```{r,fig.dim=c(20,10),echo=FALSE}
+
+levels_v70 <- 
+c("Contacts with BIGSSS fellows or faculty",
+"Funding (e.g., scholarship)",
+"Academic excellence in the social sciences",
+"Structured doctoral curriculum",
+"Freedom to pursue your own research project",
+"Close supervision through a doctoral committee",
+"The opportunity to work interdisciplinarily",
+"The international character of BIGSSS",
+"Being part of a cohort of other PhD students",
+"Wanted to live in Germany and/or Bremen, specifically",
+"It was required for your job",
+"Good working conditions (e.g., a work contract)")
+
+labelsv70 <- paste0(c("A","B","C","D",
+                      "E","F","G","H",
+                      "I","J","K","L"),". ",levels_v70)
+
+levels(df_lik1$v70_1) <- labelsv70
+levels(df_lik1$v70_2) <- labelsv70
+levels(df_lik1$v70_3) <- labelsv70
+df_lik1 %>% 
+  select(v70_1:v70_3) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  labs(title = "BIGSSS in General") +
+  theme(legend.position = "bottom",
+        legend.text = element_text(size = 12))
+```
 
 
 
