@@ -18,7 +18,7 @@ editor_options:
 # Setup
 
 ```{r setup,echo=FALSE}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE,cache = T)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE,cache = F)
 options(scipen=9999) # desactivar notacion cientifica
 ```
 
@@ -51,6 +51,7 @@ ggplot2::theme_update(text=ggplot2::element_text(family="serif"))
 if (!require("pacman")) install.packages("pacman") # instalar pacman
 pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert)
 load(here::here("input/data/proc/bigsss_2023.RData"))
+        
 
 df2[df2==-999] <- NA   
 df2<- set_na(df2,na = -999)
@@ -224,63 +225,63 @@ df_lik1 %>%
   select(v10,v11,v12) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
   labs(title = "Preparatory Forum") 
 
 df_lik1 %>% 
   select(v13:v15) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=35,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=35,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Proposal Workshop")
 
 df_lik1 %>% 
   select(v16:v18) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Core Theory Seminar")
 
 df_lik1 %>% 
   select(v19:v21) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Methods Courses")
 
 df_lik1 %>% 
   select(v22,v23,v24) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=35,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=35,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Doctoral Colloquia")
 
 df_lik1 %>% 
   select(v25,v26,v27) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Lecture Series")
 
 df_lik1 %>% 
   select(v28,v29,v30) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Transferable Skills Workshops")
 
 df_lik1 %>% 
   select(v31,v32) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Progress Assessment Colloquia (PACs)")
 
 df_lik1 %>% 
   select(v33) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "BIGSSS Curriculum Overall")
 
 
@@ -288,35 +289,35 @@ df_lik1 %>%
   select(v35:v43) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Dissertation Committee")
 
 df_lik1 %>% 
   select(v44:v45) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "BIGSSS Faculty")
 
 df_lik1 %>% 
   select(v47:v55) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Administrative Structures at BIGSSS")
 
 df_lik1 %>% 
   select(v57:v61) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Equality, Diversity, and Inclusion at BIGSSS")
 
 df_lik1 %>% 
   select(v57:v61) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "Equality, Diversity, and Inclusion at BIGSSS")
 
 
@@ -324,11 +325,11 @@ df_lik1 %>%
   select(v63:v68) %>% 
   setNames(get_label(.)) %>% 
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
+  plot(low.color="#D95F02",high.color='#1C9E77',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
   labs(title = "BIGSSS in General")
 ```
 
-```{r,fig.dim=c(20,10),echo=FALSE}
+```{r,fig.dim=c(21,8),echo=FALSE}
 
 levels_v70 <- 
 c("Contacts with BIGSSS fellows or faculty",
@@ -351,14 +352,38 @@ labelsv70 <- paste0(c("A","B","C","D",
 levels(df_lik1$v70_1) <- labelsv70
 levels(df_lik1$v70_2) <- labelsv70
 levels(df_lik1$v70_3) <- labelsv70
-df_lik1 %>% 
-  select(v70_1:v70_3) %>% 
-  setNames(get_label(.)) %>% 
+df_lik1 %>%
+  select(v70_1, v70_2, v70_3) %>%
+  setNames(get_label(.)) %>%
   likert() %>%
-  plot(low.color="#D30132",high.color='#5586B4',wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=4)+
-  labs(title = "BIGSSS in General") +
-  theme(legend.position = "bottom",
-        legend.text = element_text(size = 12))
+  plot(
+    low.color = "#D95F02",
+    high.color = '#1C9E77',
+    wrap = 40,
+    plot.percents = TRUE,
+    plot.percent.low = FALSE,
+    plot.percent.high = FALSE,
+    plot.percent.neutral = FALSE,
+    text.size = 4
+  ) +
+  labs(title = "Most Important Aspects in Pursuing a PhD at BIGSSS") +
+  scale_x_discrete(
+    labels = function(x)
+      str_wrap(x, width = 40),
+    limits = c(
+      "Most important behind decision PhD at BIGSSS: Third mention (n = 29)",
+      "Most important behind decision PhD at BIGSSS: Second mention (n = 30)",
+      "Most important behind decision PhD at BIGSSS: First mention (n = 32)"
+    )
+  ) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.text = element_text(size = 12),
+    axis.text.y =  element_text(size = 22),
+    legend.title = element_blank(),
+    title = element_text(size = 22)
+  )
 ```
 
 
