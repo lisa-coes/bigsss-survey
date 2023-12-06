@@ -387,4 +387,426 @@ df_lik1 %>%
 ```
 
 
+# Splited plots
+
+
+```{r}
+if (!require("pacman")) install.packages("pacman") # instalar pacman
+pacman::p_load(tidyverse,haven,sjlabelled,sjmisc,likert,plyr,gridExtra,grid)
+load(here::here("input/data/proc/bigsss_2023.RData"))
+
+df2[df2==-999] <- NA 
+df2<- set_na(df2,na = -999)
+
+df2$fellow <- factor(df2$v8,labels = c("Affiliated Fellows", "Regular Fellows"))
+
+varlab <- sjlabelled::get_label(df2)
+labels <- c("Strongly disagree","Disagree","Neutral","Agree","Strongly agree")
+
+for (i in names(select(df2,v10:v32,v35:v45,v47:v55,v57:v61,v63:v68))) {
+  df2[[i]] <- factor(df2[[i]],levels =labels,labels = labels)
+}
+
+ggplot2::theme_update(text=element_text(size=18,  family="serif"))  
+
+#bigsss color palette
+set1 <- c("#1C9E77","#D95F02","#999999","#004481","#1C2747")
+
+
+df2_reg <- df2 %>% filter(fellow=="Regular Fellows")
+sjlabelled::set_label(df2_reg) <- paste0(varlab, " (n = ",summarise_all(df2_reg,~ sum(!is.na(.))),")")
+
+df2_aff <- df2 %>% filter(fellow=="Affiliated Fellows")
+sjlabelled::set_label(df2_aff) <- paste0(varlab, " (n = ",summarise_all(df2_aff,~ sum(!is.na(.))),")")
+
+df_lik1_reg <- df2_reg
+df_lik1_aff <- df2_aff
+
+get_legend<-function(myggplot){
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+```
+
+
+```{r}
+# Preparatory forum------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v10,v11,v12) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v10,v11,v12) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/01-prepforum.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Preparatory Forum",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# Proposal workshop------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v13:v15) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v13:v15) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/02-propworkshop.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Proposal Workshop",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# Core theory seminar------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v16:v18) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v16:v18) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/03-coretheory.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Core Theory Seminar",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# methos courses------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v19:v21) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v19:v21) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/04-method-courses.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Methods courses",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# Doctoral Colloquia------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v22,v23,v24) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v22,v23,v24) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/05-doctoral-colloquia.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Doctoral Colloquia",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# lecture series------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v25,v26,v27) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v25,v26,v27) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/06-lecture-series.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Lecture Series",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# transferable skills------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v28,v29,v30) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v28,v29,v30) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/07-trans-skills.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Transferable Skills Workshops",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# BIGSSS Curriculum Overall------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v33) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v33) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=30,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/08-bigsss-curric.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("BIGSSS Curriculum Overall",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# Dissertation Committee------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v35:v43) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=100,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none",axis.text=element_text(size=12))
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v35:v43) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=100,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none",axis.text=element_text(size=12))
+
+png("output/images/09-diss-comit.jpeg", width = 20, height = 10,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Dissertation Committee",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+
+```{r}
+# BIGSSS Faculty------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v44,v45) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none")
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v44,v45) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none")
+
+png("output/images/10-bigsss-faculty.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("BIGSSS Faculty",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# Administrative Structures at BIGSSS"------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v47:v55) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=90,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none",axis.text=element_text(size=12))
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v47:v55) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=90,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none",axis.text=element_text(size=12))
+
+png("output/images/11-admin-structures.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Administrative Structures at BIGSSS",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+```{r}
+# Equality, Diversity, and Inclusion at BIGSSS------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v57:v61) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=50,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none",axis.text=element_text(size=12))
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v57:v61) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=50,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none",axis.text=element_text(size=12))
+
+png("output/images/12-equal-oppo.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("Equality, Diversity, and Inclusion at BIGSSS",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
+
+
+```{r}
+# Equality, Diversity, and Inclusion at BIGSSS------------------------------------------------------------
+plot1<- 
+df_lik1_reg %>% 
+  select(v63:v68) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Regular Fellows") 
+
+legend <- get_legend(plot1)
+plot1 <- plot1 + theme(legend.position="none",axis.text=element_text(size=10))
+
+plot2 <- 
+  df_lik1_aff %>% 
+  filter(fellow=="Affiliated Fellows") %>% 
+  select(v63:v68) %>% 
+  setNames(get_label(.)) %>% 
+  likert() %>%
+  plot(low.color="#D95F02",high.color='#1C9E77',center=3, wrap=40,plot.percents=TRUE, plot.percent.low=FALSE, plot.percent.high=FALSE, plot.percent.neutral=FALSE,text.size=3) +
+  labs(title = NULL,subtitle = "Affiliated Fellows") +
+  theme(legend.position="none",axis.text=element_text(size=10))
+
+png("output/images/13-bigsss-general.jpeg", width = 16, height = 9,res = 256,units = "in")
+grid.arrange(plot1, plot2, legend, ncol=1,nrow =3,heights = c(2.5,2.5,0.2),
+             top=textGrob("BIGSSS in General",gp=gpar(fontsize=22,fontfamily = "serif")))
+dev.off()
+```
 
